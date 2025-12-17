@@ -3,11 +3,13 @@ services:
     name: minimora
     runtime: node
     plan: free
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && npm run start
     envVars:
       - key: NODE_ENV
         value: production
+      - key: DATABASE_URL
+        value: file:./dev.sqlite
       - key: SHOPIFY_API_KEY
         sync: false
       - key: SHOPIFY_API_SECRET
