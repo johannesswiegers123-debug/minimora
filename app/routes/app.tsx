@@ -1,8 +1,8 @@
 import type { HeadersFunction, LoaderFunctionArgs } from "react-router";
-import { Outlet, useLoaderData, useRouteError } from "react-router";
+import { Outlet, useLoaderData, useRouteError, useLocation } from "react-router";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
-import { NavMenu } from "@shopify/app-bridge-react";
+import { NavigationMenu } from "@shopify/app-bridge-react";
 
 import { authenticate } from "../shopify.server";
 
@@ -17,15 +17,36 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
   const { apiKey } = useLoaderData<typeof loader>();
+  const location = useLocation();
 
   return (
     <AppProvider embedded apiKey={apiKey}>
-      <NavMenu>
-        <a href="/app" rel="home">Dashboard</a>
-        <a href="/app/orders">Orders</a>
-        <a href="/app/settings">Settings</a>
-        <a href="/app/help">Help</a>
-      </NavMenu>
+      <NavigationMenu
+        navigationLinks={[
+          {
+            label: "Dashboard",
+            destination: "/app",
+          },
+          {
+            label: "Orders",
+            destination: "/app/orders",
+          },
+          {
+            label: "Settings",
+            destination: "/app/settings",
+          },
+          {
+            label: "Help",
+            destination: "/app/help",
+          },
+        ]}
+        matcher={(link, location) => {
+          if (link.destination === "/app" && location.pathname === "/app") {
+            return true;
+          }
+          return location.pathname.startsWith(link.destination) && link.destination !== "/app";
+        }}
+      />
       <Outlet />
     </AppProvider>
   );
