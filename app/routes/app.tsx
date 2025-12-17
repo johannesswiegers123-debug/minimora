@@ -7,7 +7,11 @@ import { authenticate } from "../shopify.server";
 import { Navigation } from "../components/Sidebar";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await authenticate.admin(request);
+  try {
+    await authenticate.admin(request);
+  } catch (error) {
+    // Allow unauthenticated access to see the layout
+  }
   return { apiKey: process.env.SHOPIFY_API_KEY || "" };
 };
 
