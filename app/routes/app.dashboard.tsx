@@ -205,16 +205,21 @@ export default function Dashboard() {
   // Generate daily data from actual orders
   const dailyData = generateDailyData(ecoOrders);
   
-  // Generate top products from orders
-  const topProducts = [
-    { name: "Most ordered product", count: ecoOrdersCount > 0 ? Math.ceil(ecoOrdersCount / 5) : 0 },
-    { name: "Second most popular", count: ecoOrdersCount > 1 ? Math.ceil(ecoOrdersCount / 5) : 0 },
-    { name: "Third most popular", count: ecoOrdersCount > 2 ? Math.ceil(ecoOrdersCount / 6) : 0 },
-    { name: "Fourth popular", count: ecoOrdersCount > 3 ? Math.ceil(ecoOrdersCount / 7) : 0 },
-    { name: "Fifth popular", count: ecoOrdersCount > 4 ? Math.ceil(ecoOrdersCount / 8) : 0 },
-  ].filter(p => p.count > 0);
+  // Generate top products from actual order data
+  const productCounts: Record<string, number> = {};
+  ecoOrders.forEach((order: Order) => {
+    order.lineItems?.forEach((item: any) => {
+      const title = item.title || "Unknown Product";
+      productCounts[title] = (productCounts[title] || 0) + item.quantity;
+    });
+  });
+  
+  const topProducts = Object.entries(productCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([name, count]) => ({ name, count }));
 
-  const maxDailyCount = dailyData.length > 0 ? Math.max(...dailyData.map((d) => d.count)) : 1;
+  const maxDailyCount = dailyData.length > 0 ? Math.max(...dailyData.map((d) => d.count), 1) : 1;
 
   const styles = {
     container: {
@@ -441,13 +446,13 @@ export default function Dashboard() {
 
         <div style={styles.metricCard}>
           <div style={styles.metricLabel}>Estimated Savings</div>
-          <div style={styles.metricValue}>{(metrics.estimatedCostSaved / 100).toLocaleString("da-DK", { maximumFractionDigits: 2 })} kr</div>
+          <div style={styles.metricValue}>{metrics.estimatedCostSaved.toLocaleString("da-DK", { maximumFractionDigits: 0 })} kr</div>
           <p style={styles.metricSubtext}>on packaging costs</p>
         </div>
 
         <div style={styles.metricCard}>
           <div style={styles.metricLabel}>Discounts Given</div>
-          <div style={styles.metricValue}>{metrics.totalDiscountGiven.toLocaleString("da-DK", { maximumFractionDigits: 2 })} kr</div>
+          <div style={styles.metricValue}>{metrics.totalDiscountGiven.toLocaleString("da-DK", { maximumFractionDigits: 0 })} kr</div>
           <p style={styles.metricSubtext}>in customer incentives</p>
         </div>
       </div>
@@ -527,6 +532,7 @@ export default function Dashboard() {
                     onChange={(e) => setPackagingCost(parseFloat(e.target.value))}
                     style={styles.input}
                   />
+                  <span style={{ fontSize: "14px", color: "#5f6368" }}>kr</span>
                   <button style={styles.button} onClick={() => setEditingCost(false)}>
                     Save
                   </button>
@@ -534,7 +540,7 @@ export default function Dashboard() {
               ) : (
                 <>
                   <div style={{ fontSize: "24px", fontWeight: "700", color: "#202124" }}>
-                    {(packagingCost / 100).toLocaleString("da-DK", { maximumFractionDigits: 2 })} kr
+                    {packagingCost} kr
                   </div>
                   <button style={styles.buttonSecondary} onClick={() => setEditingCost(true)}>
                     Edit
@@ -558,7 +564,7 @@ export default function Dashboard() {
               Total Saved
             </div>
             <div style={{ fontSize: "24px", fontWeight: "700", color: "#1f9e6e" }}>
-              {(metrics.estimatedCostSaved / 100).toLocaleString("da-DK", { maximumFractionDigits: 2 })} kr
+              {metrics.estimatedCostSaved.toLocaleString("da-DK", { maximumFractionDigits: 0 })} kr
             </div>
           </div>
         </div>
