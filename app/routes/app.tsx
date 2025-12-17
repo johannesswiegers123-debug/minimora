@@ -55,6 +55,4 @@ export default function App() {
 export function ErrorBoundary() {
   return boundary.error(useRouteError());
 }
-  return boundary.error(useRouteError());
-}
 
