@@ -7,8 +7,7 @@ import { authenticate } from "../shopify.server";
 import { SidebarLayout } from "../components/Sidebar";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  // Don't require authentication - allow access to app
-  // eslint-disable-next-line no-undef
+  await authenticate.admin(request);
   return { apiKey: process.env.SHOPIFY_API_KEY || "" };
 };
 
@@ -28,3 +27,4 @@ export default function App() {
 export function ErrorBoundary() {
   return boundary.error(useRouteError());
 }
+

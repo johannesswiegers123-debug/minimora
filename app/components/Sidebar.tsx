@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router";
 
-export function Sidebar() {
+export function SidebarLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   const isActive = (path: string) => {
@@ -18,19 +18,23 @@ export function Sidebar() {
       left: 0,
       top: 0,
       overflowY: "auto" as const,
+      zIndex: 1000,
     },
     container: {
       display: "flex",
       minHeight: "100vh",
+      width: "100%",
     },
     content: {
       marginLeft: "250px",
       flex: 1,
+      width: "calc(100% - 250px)",
+      backgroundColor: "#fff",
     },
     title: {
       padding: "16px 20px",
       fontSize: "18px",
-      fontWeight: "700",
+      fontWeight: "700" as const,
       color: "#202124",
       margin: "0 0 20px 0",
     },
@@ -43,28 +47,15 @@ export function Sidebar() {
       color: active ? "#1f9e6e" : "#5f6368",
       textDecoration: "none",
       fontSize: "14px",
-      fontWeight: active ? "600" : "500",
+      fontWeight: active ? "600" : "500" as const,
       borderLeft: active ? "3px solid #1f9e6e" : "3px solid transparent",
       paddingLeft: active ? "17px" : "20px",
       backgroundColor: active ? "#f0fdf4" : "transparent",
       transition: "all 0.2s ease",
       cursor: "pointer",
       display: "block",
-      ":hover": {
-        backgroundColor: "#f0fdf4",
-        color: "#1f9e6e",
-      },
     }),
   };
-
-  return {
-    styles,
-    isActive,
-  };
-}
-
-export function SidebarLayout({ children }: { children: React.ReactNode }) {
-  const { styles, isActive } = Sidebar();
 
   const menuItems = [
     { label: "Dashboard", path: "/app/dashboard" },
