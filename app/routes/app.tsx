@@ -7,7 +7,11 @@ import { NavMenu } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await authenticate.admin(request);
+  try {
+    await authenticate.admin(request);
+  } catch (error) {
+    // Continue without requiring auth - let the child routes handle it
+  }
   return { apiKey: process.env.SHOPIFY_API_KEY || "" };
 };
 
