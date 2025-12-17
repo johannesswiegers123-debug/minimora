@@ -11,23 +11,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const auth = await authenticate.admin(request);
     admin = auth.admin;
   } catch (error) {
-    // Authentication failed - return demo data
-    console.warn("Using demo data (auth not available)");
-    return { 
-      orders: [
-        { id: "1", name: "#1001", createdAt: "2025-12-15T10:00:00Z", customer: { firstName: "John", lastName: "Doe", email: "john@example.com" }, lineItems: [{ quantity: 2 }], note: "eco packaging", subtotal: 599, ecoPackaging: true },
-        { id: "2", name: "#1002", createdAt: "2025-12-14T14:30:00Z", customer: { firstName: "Jane", lastName: "Smith", email: "jane@example.com" }, lineItems: [{ quantity: 1 }], note: "standard", subtotal: 299, ecoPackaging: false },
-        { id: "3", name: "#1003", createdAt: "2025-12-13T09:15:00Z", customer: { firstName: "Bob", lastName: "Johnson", email: "bob@example.com" }, lineItems: [{ quantity: 3 }], note: "eco packaging", subtotal: 899, ecoPackaging: true },
-      ] 
-    };
+    // Authentication failed - return empty data
+    console.warn("Auth not available - returning empty data");
+    return { orders: [] };
   }
 
   try {
-    // Fetch orders from Shopify Admin API
+    // Fetch orders from Shopify Admin API with cart attributes
     const response = await admin.graphql(
       `#graphql
         query {
-          orders(first: 100) {
+          orders(first: 250, sortKey: CREATED_AT, reverse: true) {
             edges {
               node {
                 id
@@ -38,15 +32,26 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
                   lastName
                   email
                 }
-                lineItems(first: 10) {
+                lineItems(first: 50) {
                   edges {
                     node {
                       quantity
+                      title
                     }
                   }
                 }
                 note
+                customAttributes {
+                  key
+                  value
+                }
                 subtotalPriceSet {
+                  shopMoney {
+                    amount
+                    currencyCode
+                  }
+                }
+                totalDiscountsSet {
                   shopMoney {
                     amount
                   }
@@ -59,16 +64,31 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     );
 
     const data = await response.json();
-    const orders = data.data?.orders?.edges?.map((edge: any) => ({
-      id: edge.node.id,
-      name: edge.node.name,
-      createdAt: edge.node.createdAt,
-      customer: edge.node.customer,
-      lineItems: edge.node.lineItems?.edges?.map((le: any) => ({ quantity: le.node.quantity })) || [],
-      note: edge.node.note,
-      subtotal: parseFloat(edge.node.subtotalPriceSet?.shopMoney?.amount || "0"),
-      ecoPackaging: edge.node.note?.toLowerCase().includes("eco") || false,
-    })) || [];
+    const orders = data.data?.orders?.edges?.map((edge: any) => {
+      // Check if eco_packaging attribute is set to 'yes'
+      const ecoAttribute = edge.node.customAttributes?.find(
+        (attr: any) => attr.key === 'eco_packaging'
+      );
+      const hasEcoPackaging = ecoAttribute?.value === 'yes' || 
+        edge.node.note?.toLowerCase().includes('eco') ||
+        edge.node.note?.toLowerCase().includes('minimal packaging');
+
+      return {
+        id: edge.node.id,
+        name: edge.node.name,
+        createdAt: edge.node.createdAt,
+        customer: edge.node.customer,
+        lineItems: edge.node.lineItems?.edges?.map((le: any) => ({ 
+          quantity: le.node.quantity,
+          title: le.node.title 
+        })) || [],
+        note: edge.node.note,
+        subtotal: parseFloat(edge.node.subtotalPriceSet?.shopMoney?.amount || "0"),
+        currency: edge.node.subtotalPriceSet?.shopMoney?.currencyCode || "DKK",
+        discount: parseFloat(edge.node.totalDiscountsSet?.shopMoney?.amount || "0"),
+        ecoPackaging: hasEcoPackaging,
+      };
+    }) || [];
 
     return { orders };
   } catch (error) {

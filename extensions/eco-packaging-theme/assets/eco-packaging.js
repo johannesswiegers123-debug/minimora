@@ -1,5 +1,5 @@
 window.ecoPackaging = {
-  handleToggle(isChecked, sectionId) {
+  async handleToggle(isChecked, sectionId) {
     // Save to localStorage
     localStorage.setItem('eco_packaging', isChecked ? 'minimal' : 'standard');
     localStorage.setItem(`eco_packaging_${sectionId}`, isChecked ? 'minimal' : 'standard');
@@ -9,6 +9,21 @@ window.ecoPackaging = {
       localStorage.setItem('eco_packaging_apply_discount', 'true');
     } else {
       localStorage.removeItem('eco_packaging_apply_discount');
+    }
+
+    // Update cart attributes so it's saved with the order
+    try {
+      await fetch('/cart/update.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          attributes: {
+            'eco_packaging': isChecked ? 'yes' : 'no'
+          }
+        })
+      });
+    } catch (e) {
+      console.warn('Could not update cart attributes:', e);
     }
   },
 
