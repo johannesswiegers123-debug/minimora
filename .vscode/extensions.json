@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "shopify.theme-check-vscode",
+    "Shopify.ruby-lsp",
+    "ms-vscode.vscode-typescript-next",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.makefile-tools",
+    "ms-vscode-remote.remote-containers",
+    "bradlc.vscode-tailwindcss",
+    "GraphQL.vscode-graphql"
+  ]
+}

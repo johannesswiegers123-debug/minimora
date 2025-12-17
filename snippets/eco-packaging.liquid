@@ -1,0 +1,101 @@
+{%- comment -%}
+  Eco Packaging Toggle Component
+  Displays in the cart drawer to let customers choose minimal packaging and get 5% off
+  
+  Usage: {% render 'eco-packaging' %}
+  
+  Requires:
+  - cart object (global)
+  - /cart.js, /cart/update.js endpoints
+  - eco-packaging.js asset loaded
+  - eco-packaging.css asset loaded
+{%- endcomment -%}
+
+<div class="eco-packaging-wrapper" data-eco-packaging-container>
+  <div class="eco-packaging-header">
+    <h3 class="eco-packaging-title">
+      💚 {{ 'eco_packaging.title' | t: default: 'Save packaging, save 5%' }}
+    </h3>
+  </div>
+
+  <p class="eco-packaging-description">
+    {{ 'eco_packaging.description' | t: default: 'Choose minimal packaging to reduce waste. You\'ll get 5% off.' }}
+  </p>
+
+  <fieldset class="eco-packaging-fieldset">
+    <legend class="visually-hidden">{{ 'eco_packaging.legend' | t: default: 'Packaging option' }}</legend>
+
+    <!-- Standard Packaging Option -->
+    <div class="eco-packaging-option">
+      <input
+        type="radio"
+        id="eco-packaging-standard"
+        name="eco-packaging"
+        value="standard"
+        class="eco-packaging-radio"
+        data-eco-packaging-choice
+        aria-describedby="eco-packaging-standard-desc"
+      >
+      <label for="eco-packaging-standard" class="eco-packaging-label">
+        <span class="eco-packaging-label-text">
+          {{ 'eco_packaging.standard' | t: default: 'Standard packaging' }}
+        </span>
+      </label>
+      <p id="eco-packaging-standard-desc" class="eco-packaging-label-hint">
+        {{ 'eco_packaging.standard_hint' | t: default: 'Default, protective packaging' }}
+      </p>
+    </div>
+
+    <!-- Minimal Packaging Option -->
+    <div class="eco-packaging-option">
+      <input
+        type="radio"
+        id="eco-packaging-minimal"
+        name="eco-packaging"
+        value="minimal"
+        class="eco-packaging-radio"
+        data-eco-packaging-choice
+        aria-describedby="eco-packaging-minimal-desc"
+      >
+      <label for="eco-packaging-minimal" class="eco-packaging-label">
+        <span class="eco-packaging-label-text">
+          {{ 'eco_packaging.minimal' | t: default: 'Minimal packaging (5% off)' }}
+        </span>
+        <span class="eco-packaging-badge" data-eco-packaging-badge style="display: none;">
+          {{ 'eco_packaging.badge' | t: default: '5% applied' }}
+        </span>
+      </label>
+      <p id="eco-packaging-minimal-desc" class="eco-packaging-label-hint">
+        {{ 'eco_packaging.minimal_hint' | t: default: 'Reduce waste, better for the planet' }}
+      </p>
+    </div>
+  </fieldset>
+
+  <!-- Status message for ineligible items -->
+  <div
+    class="eco-packaging-status"
+    data-eco-packaging-status
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    style="display: none;"
+  >
+    <span class="eco-packaging-status-text" data-eco-packaging-status-text></span>
+  </div>
+
+  <!-- Loading state -->
+  <div class="eco-packaging-loading" data-eco-packaging-loading style="display: none;">
+    <span class="eco-packaging-spinner"></span>
+    {{ 'eco_packaging.applying' | t: default: 'Applying...' }}
+  </div>
+</div>
+
+<script type="application/json" id="eco-packaging-config" data-eco-packaging-config>
+{
+  "discountCode": "ECO5",
+  "discountPercentage": 5,
+  "excludeProductTags": ["no_eco_discount"],
+  "excludeProductTypes": ["gift_card"],
+  "debug": false
+}
+</script>

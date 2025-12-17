@@ -1,0 +1,51 @@
+npm warn Unknown project config "shamefully-hoist". This will stop working in the next major version of npm.
+
+> dev
+> shopify app dev
+
+╭─ info ───────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│  Using shopify.app.toml for default values:                                  │
+│                                                                              │
+│    • Org:             Minimora                                               │
+│    • App:             minimora                                               │
+│    • Dev store:       minimora-4.myshopify.com                               │
+│    • Update URLs:     Yes                                                    │
+│                                                                              │
+│   You can pass `--reset` to your command to reset your app configuration.    │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+╭─ warning ────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│  A random port will be used for GraphiQL because 3457 is not available.      │
+│                                                                              │
+│  If you want to use a specific port, you can choose a different one by       │
+│  setting the  `--graphiql-port`  flag.                                       │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+Running pre-dev command: "npx prisma generate"Preparing dev preview on minimora-4.myshopify.comProxy server started on port 61325 GraphiQL server started on port 61328npm warn Unknown env config "shamefully-hoist". This will stop working in the next major version of npm.
+npm warn Unknown project config "shamefully-hoist". This will stop working in the next major version of npm.
+✅ Ready, watching for changes in your app │ Access scopes auto-granted: write_products└ Using URL: https://portion-intelligence-lists-equation.trycloudflare.comnpm warn Unknown env config "shamefully-hoist". This will stop working in the next major version of npm.
+npm warn Unknown project config "shamefully-hoist". This will stop working in the next major version of npm.
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": SQLite database "dev.sqlite" at "file:dev.sqlite"
+
+1 migration found in prisma/migrations
+
+
+No pending migrations to apply.
+npm warn Unknown env config "shamefully-hoist". This will stop working in the next major version of npm.
+npm warn Unknown project config "shamefully-hoist". This will stop working in the next major version of npm.
+  ➜  Local:   http://localhost:61329/
+  ➜  Network: use --host to expose
+❌ Error└  Error reloading app: Fix the following error in extensions/eco-packaging-theme/shopify.extension.toml:
+Unknown character "123" at row 1, col 2, pos 1:
+1> {
+    ^
+2:   "extension_points": {
+
+5:46:17 PM [react-router] Config changed.
+8:13:52 PM [react-router] Config changed.
+8:14:24 PM [react-router] Config changed.

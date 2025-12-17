@@ -1,0 +1,115 @@
+{% schema %}
+{
+  "name": "Eco Packaging Toggle",
+  "target": "product",
+  "class": "eco-packaging-block",
+  "settings": [
+    {
+      "type": "text",
+      "id": "discount_code",
+      "label": "Discount Code (e.g., ECO5)",
+      "default": "ECO5"
+    },
+    {
+      "type": "number",
+      "id": "discount_percentage",
+      "label": "Discount Percentage",
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Save packaging, save %"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Choose minimal packaging to reduce waste. You'll get a discount."
+    },
+    {
+      "type": "text",
+      "id": "exclude_tags",
+      "label": "Exclude Products With Tags (comma-separated)",
+      "default": "no_eco_discount"
+    },
+    {
+      "type": "text",
+      "id": "exclude_types",
+      "label": "Exclude Product Types (comma-separated)",
+      "default": "gift_card"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="eco-packaging-wrapper" data-eco-packaging-container data-eco-packaging-product="{{ product.id }}">
+  <div class="eco-packaging-header">
+    <h3 class="eco-packaging-title">
+      💚 {{ section.settings.title | replace: '%', section.settings.discount_percentage }}
+    </h3>
+  </div>
+
+  <p class="eco-packaging-description">
+    {{ section.settings.description }}
+  </p>
+
+  <fieldset class="eco-packaging-fieldset">
+    <legend class="visually-hidden">Packaging option</legend>
+
+    <div class="eco-packaging-option">
+      <input
+        type="radio"
+        id="eco-packaging-standard"
+        name="eco-packaging"
+        value="standard"
+        class="eco-packaging-radio"
+        data-eco-packaging-choice
+      >
+      <label for="eco-packaging-standard" class="eco-packaging-label">
+        <span class="eco-packaging-label-text">Standard packaging</span>
+      </label>
+      <p class="eco-packaging-label-hint">Default, protective packaging</p>
+    </div>
+
+    <div class="eco-packaging-option">
+      <input
+        type="radio"
+        id="eco-packaging-minimal"
+        name="eco-packaging"
+        value="minimal"
+        class="eco-packaging-radio"
+        data-eco-packaging-choice
+      >
+      <label for="eco-packaging-minimal" class="eco-packaging-label">
+        <span class="eco-packaging-label-text">Minimal packaging ({{ section.settings.discount_percentage }}% off)</span>
+        <span class="eco-packaging-badge" data-eco-packaging-badge style="display: none;">
+          {{ section.settings.discount_percentage }}% applied
+        </span>
+      </label>
+      <p class="eco-packaging-label-hint">Reduce waste, better for the planet</p>
+    </div>
+  </fieldset>
+
+  <div class="eco-packaging-status" data-eco-packaging-status role="status" aria-live="polite" style="display: none;">
+    <span class="eco-packaging-status-text" data-eco-packaging-status-text></span>
+  </div>
+
+  <div class="eco-packaging-loading" data-eco-packaging-loading style="display: none;">
+    <span class="eco-packaging-spinner"></span>
+    Applying...
+  </div>
+</div>
+
+<script type="application/json" id="eco-packaging-config-{{ section.id }}" data-eco-packaging-config>
+{
+  "discountCode": "{{ section.settings.discount_code }}",
+  "discountPercentage": {{ section.settings.discount_percentage }},
+  "excludeProductTags": [{{ section.settings.exclude_tags | split: ',' | join: ',' | map: 'trim' | map: 'prepend: "\"' | map: 'append: "\"' | join: ',' }}],
+  "excludeProductTypes": [{{ section.settings.exclude_types | split: ',' | join: ',' | map: 'trim' | map: 'prepend: "\"' | map: 'append: "\"' | join: ',' }}],
+  "sectionId": "{{ section.id }}",
+  "productId": {{ product.id }},
+  "isProductPage": true
+}
+</script>

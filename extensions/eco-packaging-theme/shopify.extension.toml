@@ -1,0 +1,11 @@
+
+uid = "b10192a5-94be-9d06-a777-71d6835eed6dcb94c1a5"
+type = "theme"
+name = "Eco Packaging"
+description = "Let customers choose minimal packaging and get a discount"
+
+[[extension_points]]
+target = "theme.js.buy-button.cart-checkout"
+module = "./assets/eco-packaging.js"
+
+

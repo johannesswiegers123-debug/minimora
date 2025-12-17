@@ -1,0 +1,75 @@
+<!-- ECO PACKAGING TOGGLE - COPY & PASTE THIS INTO YOUR PRODUCT TEMPLATE -->
+
+{% comment %}
+Installation: 
+1. Copy the HTML/Liquid code below
+2. Paste into your product.liquid or product template (above "Add to cart" button)
+3. Ensure the JS/CSS files are included (see instructions below)
+{% endcomment %}
+
+<div class="eco-packaging-wrapper" data-eco-packaging-container data-eco-packaging-product="{{ product.id }}">
+  <div class="eco-packaging-header">
+    <h3 class="eco-packaging-title">💚 Save packaging, save 5%</h3>
+  </div>
+
+  <p class="eco-packaging-description">
+    Choose minimal packaging to reduce waste. You'll get a discount.
+  </p>
+
+  <fieldset class="eco-packaging-fieldset">
+    <legend class="visually-hidden">Packaging option</legend>
+
+    <div class="eco-packaging-option">
+      <input
+        type="radio"
+        id="eco-packaging-standard"
+        name="eco-packaging"
+        value="standard"
+        class="eco-packaging-radio"
+        data-eco-packaging-choice
+        checked
+      >
+      <label for="eco-packaging-standard" class="eco-packaging-label">
+        <span class="eco-packaging-label-text">Standard packaging</span>
+      </label>
+      <p class="eco-packaging-label-hint">Default, protective packaging</p>
+    </div>
+
+    <div class="eco-packaging-option">
+      <input
+        type="radio"
+        id="eco-packaging-minimal"
+        name="eco-packaging"
+        value="minimal"
+        class="eco-packaging-radio"
+        data-eco-packaging-choice
+      >
+      <label for="eco-packaging-minimal" class="eco-packaging-label">
+        <span class="eco-packaging-label-text">Minimal packaging (5% off)</span>
+        <span class="eco-packaging-badge" data-eco-packaging-badge style="display: none;">
+          5% applied
+        </span>
+      </label>
+      <p class="eco-packaging-label-hint">Reduce waste, better for the planet</p>
+    </div>
+  </fieldset>
+
+  <div class="eco-packaging-status" data-eco-packaging-status role="status" aria-live="polite" style="display: none;">
+    <span class="eco-packaging-status-text" data-eco-packaging-status-text></span>
+  </div>
+
+  <div class="eco-packaging-loading" data-eco-packaging-loading style="display: none;">
+    <span class="eco-packaging-spinner"></span>
+    Applying...
+  </div>
+</div>
+
+<script type="application/json" id="eco-packaging-config-product" data-eco-packaging-config>
+{
+  "discountCode": "ECO5",
+  "discountPercentage": 5,
+  "excludeProductTags": ["no_eco_discount"],
+  "excludeProductTypes": ["gift_card"],
+  "isProductPage": true
+}
+</script>
