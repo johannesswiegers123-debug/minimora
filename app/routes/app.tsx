@@ -4,7 +4,7 @@ import { boundary } from "@shopify/shopify-app-react-router/server";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
 
 import { authenticate } from "../shopify.server";
-import { SidebarLayout } from "../components/Sidebar";
+import { Navigation } from "../components/Sidebar";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
@@ -16,9 +16,13 @@ export default function App() {
 
   return (
     <AppProvider embedded apiKey={apiKey}>
-      <SidebarLayout>
+      <div style={{ padding: "20px" }}>
+        <h1 style={{ margin: "0 0 20px 0", fontSize: "24px", fontWeight: "700" }}>
+          minimora
+        </h1>
+        <Navigation />
         <Outlet />
-      </SidebarLayout>
+      </div>
     </AppProvider>
   );
 }
