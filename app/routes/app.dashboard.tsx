@@ -274,7 +274,7 @@ export default function Dashboard() {
     metricValue: {
       fontSize: "32px",
       fontWeight: "700",
-      color: "#1f9e6e",
+      color: "#2563eb",
       margin: "0 0 4px 0",
     } as React.CSSProperties,
     metricSubtext: {
