@@ -4,6 +4,7 @@ import { boundary } from "@shopify/shopify-app-react-router/server";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
 
 import { authenticate } from "../shopify.server";
+import { SidebarLayout } from "../components/Sidebar";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   // Don't require authentication - allow access to app
@@ -16,13 +17,9 @@ export default function App() {
 
   return (
     <AppProvider embedded apiKey={apiKey}>
-      <s-app-nav>
-        <s-link href="/app/dashboard">Dashboard</s-link>
-        <s-link href="/app/orders">Orders</s-link>
-        <s-link href="/app/settings">Settings</s-link>
-        <s-link href="/app/help">Help</s-link>
-      </s-app-nav>
-      <Outlet />
+      <SidebarLayout>
+        <Outlet />
+      </SidebarLayout>
     </AppProvider>
   );
 }
