@@ -1,65 +1,53 @@
+import { useAppBridge } from "@shopify/app-bridge-react";
 import type { ReactElement } from "react";
-import { Link, useLocation } from "react-router";
+import { useEffect } from "react";
 
 /**
  * ShopifyNavigation Component
  * 
- * Custom navigation menu for the Shopify app with active state styling
+ * Renders navigation in Shopify admin sidebar using App Bridge Navigation Menu API
  */
 
-interface NavItem {
-  label: string;
-  path: string;
-}
-
 export function ShopifyNavigation(): ReactElement {
-  const location = useLocation();
+  const appBridge = useAppBridge();
 
-  const navItems: NavItem[] = [
-    { label: "Dashboard", path: "/app/dashboard" },
-    { label: "Orders", path: "/app/orders" },
-    { label: "Settings", path: "/app/settings" },
-    { label: "Help", path: "/app/help" },
-  ];
+  useEffect(() => {
+    if (!appBridge) return;
 
-  const isActive = (path: string) => location.pathname === path;
+    const navMenu = document.createElement("ui-nav-menu");
+    
+    // Home item (required)
+    const homeLink = document.createElement("a");
+    homeLink.href = "/app";
+    homeLink.rel = "home";
+    homeLink.textContent = "Minimora";
+    navMenu.appendChild(homeLink);
 
-  const styles = {
-    nav: {
-      display: "flex",
-      gap: "0",
-      borderBottom: "1px solid #e8eaed",
-      marginBottom: "20px",
-      flexWrap: "wrap" as const,
-      backgroundColor: "#fff",
-      padding: "0",
-    },
-    link: (active: boolean) => ({
-      padding: "12px 16px",
-      color: active ? "#1f9e6e" : "#5f6368",
-      textDecoration: "none",
-      fontSize: "14px",
-      fontWeight: active ? "600" : "500" as const,
-      borderBottom: active ? "3px solid #1f9e6e" : "3px solid transparent",
-      backgroundColor: "transparent",
-      transition: "all 0.2s ease",
-      cursor: "pointer",
-      display: "block",
-      marginBottom: "-1px",
-    }),
-  };
+    // Navigation items
+    const items = [
+      { label: "Dashboard", path: "/app/dashboard" },
+      { label: "Orders", path: "/app/orders" },
+      { label: "Settings", path: "/app/settings" },
+      { label: "Help", path: "/app/help" },
+    ];
 
-  return (
-    <nav style={styles.nav}>
-      {navItems.map((item) => (
-        <Link
-          key={item.path}
-          to={item.path}
-          style={styles.link(isActive(item.path))}
-        >
-          {item.label}
-        </Link>
-      ))}
-    </nav>
-  );
+    items.forEach((item) => {
+      const link = document.createElement("a");
+      link.href = item.path;
+      link.textContent = item.label;
+      navMenu.appendChild(link);
+    });
+
+    // Append to body - App Bridge will move it to sidebar
+    document.body.appendChild(navMenu);
+
+    return () => {
+      if (navMenu.parentElement) {
+        navMenu.parentElement.removeChild(navMenu);
+      }
+    };
+  }, [appBridge]);
+
+  // Return empty - the ui-nav-menu element handles rendering in sidebar
+  return <></>;
 }
