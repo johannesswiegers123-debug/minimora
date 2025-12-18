@@ -2,9 +2,9 @@ import type { LoaderFunctionArgs } from "react-router";
 import { Outlet, useLoaderData, useRouteError } from "react-router";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
-import { NavMenu } from "@shopify/app-bridge-react";
 
 import { authenticate } from "../shopify.server";
+import { Sidebar } from "../components/Sidebar";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
@@ -20,16 +20,12 @@ export default function App() {
 
   return (
     <AppProvider embedded apiKey={apiKey}>
-      <NavMenu>
-        <a href="/app" rel="home">
-          Home
-        </a>
-        <a href="/app/dashboard">Dashboard</a>
-        <a href="/app/orders">Orders</a>
-        <a href="/app/settings">Settings</a>
-        <a href="/app/help">Help</a>
-      </NavMenu>
-      <Outlet />
+      <div style={{ display: "flex", minHeight: "100vh" }}>
+        <Sidebar />
+        <main style={{ marginLeft: "240px", flex: 1, width: "calc(100% - 240px)" }}>
+          <Outlet />
+        </main>
+      </div>
     </AppProvider>
   );
 }
