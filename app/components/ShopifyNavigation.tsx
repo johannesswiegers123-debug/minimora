@@ -1,60 +1,65 @@
 import type { ReactElement } from "react";
-import { useEffect } from "react";
+import { Link, useLocation } from "react-router";
 
 /**
  * ShopifyNavigation Component
  * 
- * Renders navigation in Shopify admin sidebar using App Bridge Navigation Menu API
+ * Navigation tabs for the Shopify app with active state styling
  */
 
+interface NavItem {
+  label: string;
+  path: string;
+}
+
 export function ShopifyNavigation(): ReactElement {
-  useEffect(() => {
-    // Wait for App Bridge to be available
-    const checkForShopify = () => {
-      if (typeof (window as any).shopify !== "undefined") {
-        // App Bridge is loaded, ui-nav-menu is available
-        return true;
-      }
-      return false;
-    };
+  const location = useLocation();
 
-    // Create nav menu if Shopify is available
-    if (checkForShopify()) {
-      const navMenu = document.createElement("ui-nav-menu");
-      
-      // Home item (required)
-      const homeLink = document.createElement("a");
-      homeLink.href = "/app";
-      homeLink.rel = "home";
-      homeLink.textContent = "Minimora";
-      navMenu.appendChild(homeLink);
+  const navItems: NavItem[] = [
+    { label: "Dashboard", path: "/app/dashboard" },
+    { label: "Orders", path: "/app/orders" },
+    { label: "Settings", path: "/app/settings" },
+    { label: "Help", path: "/app/help" },
+  ];
 
-      // Navigation items
-      const items = [
-        { label: "Dashboard", path: "/app/dashboard" },
-        { label: "Orders", path: "/app/orders" },
-        { label: "Settings", path: "/app/settings" },
-        { label: "Help", path: "/app/help" },
-      ];
+  const isActive = (path: string) => location.pathname === path;
 
-      items.forEach((item) => {
-        const link = document.createElement("a");
-        link.href = item.path;
-        link.textContent = item.label;
-        navMenu.appendChild(link);
-      });
+  const styles = {
+    nav: {
+      display: "flex",
+      gap: "0",
+      borderBottom: "2px solid #e8eaed",
+      marginBottom: "24px",
+      flexWrap: "wrap" as const,
+      backgroundColor: "#fff",
+      padding: "0",
+    },
+    link: (active: boolean) => ({
+      padding: "12px 16px",
+      color: active ? "#1f9e6e" : "#5f6368",
+      textDecoration: "none",
+      fontSize: "14px",
+      fontWeight: active ? "600" : "500" as const,
+      borderBottom: active ? "2px solid #1f9e6e" : "2px solid transparent",
+      backgroundColor: "transparent",
+      transition: "all 0.2s ease",
+      cursor: "pointer",
+      display: "block",
+      marginBottom: "-2px",
+    }),
+  };
 
-      // Append to body
-      document.body.appendChild(navMenu);
-
-      return () => {
-        if (navMenu.parentElement) {
-          navMenu.parentElement.removeChild(navMenu);
-        }
-      };
-    }
-  }, []);
-
-  // Return empty - the ui-nav-menu element handles rendering in sidebar
-  return <></>;
+  return (
+    <nav style={styles.nav}>
+      {navItems.map((item) => (
+        <Link
+          key={item.path}
+          to={item.path}
+          style={styles.link(isActive(item.path))}
+        >
+          {item.label}
+        </Link>
+      ))}
+    </nav>
+  );
 }
