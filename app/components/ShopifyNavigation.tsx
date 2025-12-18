@@ -28,11 +28,11 @@ export function ShopifyNavigation(): ReactElement {
 
   return (
     <NavMenu>
-      <a href="/app" rel="home" style={{ color: "blue", fontSize: "16px", fontWeight: "bold" }}>
+      <a href="/app" rel="home" style={{ color: "green", fontSize: "16px", fontWeight: "bold" }}>
         Minimora
       </a>
       {navItems.map((item) => (
-        <a key={item.path} href={item.path} style={{ color: "blue", fontSize: "16px", fontWeight: "bold" }}>
+        <a key={item.path} href={item.path} style={{ color: "green", fontSize: "16px", fontWeight: "bold" }}>
           {item.label}
         </a>
       ))}

@@ -274,7 +274,7 @@ export default function Dashboard() {
     metricValue: {
       fontSize: "32px",
       fontWeight: "700",
-      color: "#1f9e6e",
+      color: "#0066cc",
       margin: "0 0 4px 0",
     } as React.CSSProperties,
     metricSubtext: {
@@ -301,7 +301,7 @@ export default function Dashboard() {
     bar: (height: number) =>
       ({
         flex: 1,
-        backgroundColor: "#1f9e6e",
+        backgroundColor: "#0066cc",
         borderRadius: "4px 4px 0 0",
         height: `${height}%`,
         display: "flex",
@@ -380,7 +380,7 @@ export default function Dashboard() {
     } as React.CSSProperties,
     button: {
       padding: "8px 16px",
-      backgroundColor: "#1f9e6e",
+      backgroundColor: "#0066cc",
       color: "#fff",
       border: "none",
       borderRadius: "4px",
@@ -408,7 +408,7 @@ export default function Dashboard() {
     toggleSwitch: {
       width: "44px",
       height: "24px",
-      backgroundColor: featureEnabled ? "#1f9e6e" : "#d2d3d4",
+      backgroundColor: featureEnabled ? "#0066cc" : "#d2d3d4",
       border: "none",
       borderRadius: "12px",
       cursor: "pointer",
