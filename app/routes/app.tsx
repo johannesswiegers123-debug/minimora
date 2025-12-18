@@ -1,10 +1,9 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Outlet, useLoaderData, useRouteError } from "react-router";
 import { boundary } from "@shopify/shopify-app-react-router/server";
-import { AppProvider } from "@shopify/shopify-app-react-router/react";
+import { AppProvider, NavMenu } from "@shopify/shopify-app-react-router/react";
 
 import { authenticate } from "../shopify.server";
-import { ShopifyNavigation } from "../components/ShopifyNavigation";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
@@ -20,7 +19,15 @@ export default function App() {
 
   return (
     <AppProvider embedded apiKey={apiKey}>
-      <ShopifyNavigation />
+      <NavMenu>
+        <a href="/app" rel="home">
+          Home
+        </a>
+        <a href="/app/dashboard">Dashboard</a>
+        <a href="/app/orders">Orders</a>
+        <a href="/app/settings">Settings</a>
+        <a href="/app/help">Help</a>
+      </NavMenu>
       <Outlet />
     </AppProvider>
   );
